@@ -5,22 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BYT IMG MAKER</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
+    <style>
     body {
       font-family: monospace;
-      background-color: #0a0a0a;
-      color: #00ff99;
+      background-color: #121212;
+      color: #e0e0e0;
     }
+
     textarea {
       resize: none;
+      background-color: #1c1c1c;
+      color: #e0e0e0;
+      border: 1px solid #444;
     }
-    .neon-text {
-      text-shadow: 0 0 8px #00ff99, 0 0 16px #00ff99;
-    }
+
     .glitch {
       color: #fff;
       position: relative;
     }
+
     .glitch::before, .glitch::after {
       content: attr(data-text);
       position: absolute;
@@ -29,14 +32,17 @@
       overflow: hidden;
       clip: rect(0, 900px, 0, 0);
     }
+
     .glitch::before {
       animation: glitchTop 2s infinite linear alternate-reverse;
-      color: #ff00ff;
+      color: #aaa;
     }
+
     .glitch::after {
       animation: glitchBottom 1.5s infinite linear alternate-reverse;
-      color: #00ffff;
+      color: #888;
     }
+
     @keyframes glitchTop {
       0% { clip: rect(0, 9999px, 0, 0); }
       20% { clip: rect(0, 9999px, 20px, 0); }
@@ -45,6 +51,7 @@
       80% { clip: rect(0, 9999px, 15px, 0); }
       100% { clip: rect(0, 9999px, 0, 0); }
     }
+
     @keyframes glitchBottom {
       0% { clip: rect(0, 9999px, 0, 0); }
       20% { clip: rect(5px, 9999px, 25px, 0); }
@@ -53,6 +60,35 @@
       80% { clip: rect(20px, 9999px, 45px, 0); }
       100% { clip: rect(0, 9999px, 0, 0); }
     }
+
+    button {
+      background-color: #333;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+
+    button:hover {
+      background-color: #444;
+    }
+
+    .container {
+      background-color: #1a1a1a;
+      border: 1px solid #555;
+      padding: 2rem;
+      border-radius: 0.5rem;
+    }
+
+    #imageContainer {
+      background-color: #1c1c1c;
+      border: 1px solid #555;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      min-height: 256px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
   </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
