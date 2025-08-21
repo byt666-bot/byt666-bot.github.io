@@ -143,7 +143,7 @@
     /* ===== Vollständige Command-Liste ===== */
     const COMMANDS = [
       {
-        title:"BASIS-BEFEHLE",
+        title:"BASIC",
         items:[
           ".ping",".hi",".echo <txt>",".quote",".joke",".fact",".funfact",".name",
           ".passwort [länge]",".farbe",".zufall",".random <min> <max>",".emoji",
@@ -157,11 +157,11 @@
           ".cat",".dog",".tier",".city",".art",".anime",".gif <Suchbegriff>",
           ".dadjoke",".fortune",".motivate",".chuck",".wetter <stadt>",
           ".reverse <Text>",".sarcasm <Text>",".uwu <Text>",".count <Wort>",
-          ".calcimg <Rechnung>",".rate <Text>",".mock <Text>",".insultme"
+          ".calcimg <Rechnung>",".rate <Text>",".mock <Text>",".insultme",".wop <cat> <t/d>",".8ball <frage>",".play <song>"
         ]
       },
       {
-        title:"GRUPPE & ADMIN",
+        title:"ADMIN",
         items:[
           ".adminlist",".members",".groupinfo",".setdesc <txt>",".setsubject <txt>",
           ".kick @user",".promote @user",".demote @user",".warn @user [grund]",
@@ -172,19 +172,19 @@
         ]
       },
       {
-        title:"STICKER & SPIELE",
+        title:"STICKER",
         items:[
-          ".sticker / .s",".wop <cat> <t/d>",".8ball <frage>",".play <song>"
+          ".sticker / .s"
         ]
       },
       {
-        title:"USER & CHECKS",
+        title:"USER",
         items:[
-          ".reg Name.Alter",".me",".userinfo @user",".owner",".luisa"
+          ".reg Name.Alter",".me",".userinfo @user",".owner"
         ]
       },
       {
-        title:"CHECKS & FUN",
+        title:"CHECKS",
         items:[
           ".simpcheck @user",".cringecheck @user",".luckcheck @user",".richcheck @user",
           ".sleepycheck @user",".suscheck @user",".waifu @user",".animal @user",
@@ -192,7 +192,7 @@
         ]
       },
       {
-        title:"INTERAKTIONEN",
+        title:"AKTIONEN",
         items:[
           ".hug @user",".kiss / .kuss @user",".pat @user",".cuddle @user",".slap @user",
           ".poke @user",".bite @user",".glomp @user",".fuck @user",".toterrizz @user",
@@ -205,15 +205,14 @@
         ]
       },
       {
-        title:"CASINO & GLÜCKSSPIEL",
+        title:"CASINO ",
         items:[
           ".slot <einsatz>",".coin <einsatz> <kopf/zahl>",".jackpot <einsatz>",".dice <einsatz>",
-          ".gd",".bgo <zahl>",".roll",".bank",".pay @user <betrag>",
-          "Tipp: Gewinne Coins & XP und steigere dein Level!"
+          ".gd",".bgo <zahl>",".roll",".bank",".pay @user <betrag>"
         ]
       },
       {
-        title:"SUPPORT MENÜ",
+        title:"SUPPORT",
         items:[
           ".support <Nachricht> — Kontakt zum Support-Team",
           ".ticket <Ticket-ID> — Zeigt den Ticket-Status",
@@ -222,16 +221,15 @@
         ]
       },
       {
-        title:"NASA & WELTRAUM",
+        title:"NASA",
         items:[
-          ".apod — Astronomy Picture of the Day – Bild + Erklärung des Tages",
-          ".launches — Nächste Raketenstarts mit Ort & Zeit",
-          ".iss — Live-Position der ISS + Google-Maps-Link",
-          ".neo — Asteroiden in Erdnähe (nächste Tage)",
-          ".solar — Sonnenaktivität (Stürme, Flecken etc.)",
-          ".earthimg <lat> <lon> — Satellitenbild von Koordinaten (z. B. .earthimg 52.52 13.40)",
-          ".marsweather — Aktuelles Wetter vom Mars (InSight Rover)",
-          ".techstats — NASA Systemstatus / Tech Projekte"
+          ".apod — Astronomy Picture of the Day",
+          ".launches — Nächste Raketenstarts",
+          ".iss — Live-Position der ISS",
+          ".neo — Asteroiden in Erdnähe",
+          ".solar — Sonnenaktivität ",
+          ".earthimg <lat> <lon> — Satellitenbild von Koordinaten",
+          ".marsweather — Aktuelles Wetter vom Mars"
         ]
       }
     ];
@@ -244,7 +242,7 @@
         const box = document.createElement('div');
         box.className = 'p-4 rounded-xl border border-white/10 bg-black/30';
         box.innerHTML =
-          `<h3 class="font-semibold mb-2">⧉═════[ ${cat.title} ]═════⧉</h3>` +
+          `<h3 class="font-semibold mb-2">⧉═══[ ${cat.title} ]═══⧉</h3>` +
           '<ul class="space-y-1 text-sm">' +
           cat.items.map(i=>`<li class="border-b border-white/5 pb-1">${i}</li>`).join('') +
           '</ul>';
