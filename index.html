@@ -11,14 +11,12 @@
   <style>
     :root{--bg:#0b0b0b;--accent:#00ff99;} 
     html,body{height:100%}
-    body{
-      font-family:"JetBrains Mono",monospace;
-      background:
-        radial-gradient(1200px 600px at 10% -10%, rgba(0,255,153,.07), transparent),
-        radial-gradient(900px 500px at 110% 0%, rgba(34,211,238,.06), transparent),
-        var(--bg);
-      color:#e0e0e0
-    }
+    body {
+    font-family:"JetBrains Mono",monospace;
+    background: var(--bg); /* nur die Basisfarbe */
+    color:#e0e0e0;
+  }
+
     .neon{text-shadow:0 0 8px var(--accent),0 0 16px rgba(0,255,153,.35)}
     .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.2));border:1px solid rgba(255,255,255,.1);border-radius:1rem}
     .btn{background:#111;border:1px solid #2a2a2a;border-radius:.75rem;padding:.7rem 1rem}
