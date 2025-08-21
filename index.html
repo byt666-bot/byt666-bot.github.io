@@ -1,41 +1,84 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BYT BOT — Control Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#0b0b0b;--accent:#00ff99;} 
-    html,body{height:100%}
     body {
-    font-family:"JetBrains Mono",monospace;
-    background: var(--bg); /* nur die Basisfarbe */
-    color:#e0e0e0;
-  }
-
-    .neon{text-shadow:0 0 8px var(--accent),0 0 16px rgba(0,255,153,.35)}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.2));border:1px solid rgba(255,255,255,.1);border-radius:1rem}
-    .btn{background:#111;border:1px solid #2a2a2a;border-radius:.75rem;padding:.7rem 1rem}
-    .btn:hover{background:#171717}
-    .tab{display:none}
-    .tab.active{display:block}
-    mark{background:rgba(34,197,94,.25);padding:0 .25rem;border-radius:.3rem}
+      font-family: "JetBrains Mono", monospace;
+      background: #0b0b0b;
+      color: #e0e0e0;
+    }
+    header { background: #111; border-bottom: 1px solid #222; }
+    .btn {
+      background:#0f0f0f;
+      border:1px solid #222;
+      border-radius:.5rem;
+      padding:.5rem 1rem;
+      font-size:.9rem;
+      transition:.2s;
+    }
+    .btn:hover { background:#161616; border-color:#666; color:#ddd; }
+    .btn.active { border-color:#888; background:#1a1a1a; }
+    .tab { display:none; }
+    .tab.active { display:block; }
+    .card {
+      background:#111d;
+      border:1px solid #222;
+      border-radius:.75rem;
+      padding:1rem;
+    }
+    .commands-wrap {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .cmd-card {
+      background: #0f0f0fdd;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      font-size: .9rem;
+      color: #ddd;
+      transition: all .2s ease;
+    }
+    .cmd-card:hover {
+      border-color: #666;
+      box-shadow: 0 0 12px rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+    .section-bg {
+      background-size: cover;
+      background-position: center;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-bg::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,0.7);
+    }
+    .section-bg > * {
+      position:relative;
+      z-index:1;
+    }
   </style>
 </head>
 <body class="min-h-screen">
-  <header class="sticky top-0 z-40 bg-black/40 border-b border-white/10">
+  <header class="sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-3 h-3 rounded-full" style="background:var(--accent);"></div>
-        <h1 class="text-xl md:text-2xl font-bold neon">BYT BOT HUB</h1>
-      </div>
+      <h1 class="text-xl md:text-2xl font-bold">BYT BOT HUB</h1>
       <nav class="flex flex-wrap gap-2">
-        <button class="btn tablink" data-tab="home">Home</button>
+        <button class="btn tablink active" data-tab="home">Home</button>
         <button class="btn tablink" data-tab="commands">Commands</button>
+        <button class="btn tablink" data-tab="imggen">IMG Generator</button>
         <button class="btn tablink" data-tab="info">Bot Infos</button>
         <button class="btn tablink" data-tab="support">Support</button>
       </nav>
@@ -43,87 +86,55 @@
   </header>
 
   <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
-    <!-- ===== HOME / IMG MAKER ===== -->
-    <section id="home" class="tab active">
-      <div class="card p-6 md:p-8">
-        <h2 class="text-2xl font-bold mb-1">BYT IMG MAKER</h2>
-        <p class="text-sm text-green-400">MADE BY BYT // POWERED BY GEMINI</p>
-        <div class="grid md:grid-cols-[1.1fr_.9fr] gap-6 mt-6">
-          <div class="space-y-3">
-            <textarea id="promptInput" class="w-full h-40 p-4 bg-black/70 border border-green-600 rounded-lg text-green-200 placeholder-green-600 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="> Gib deine Beschreibung ein..."></textarea>
-            <div class="flex gap-3">
-              <button id="generateButton" class="btn border-green-700 hover:border-green-600">&gt; Bild generieren</button>
-              <button id="clearPrompt" class="btn">Clear</button>
-            </div>
-            <div id="loadingIndicator" class="hidden text-green-400 font-medium">[*] Dein Bild wird generiert...</div>
-          </div>
-          <div id="imageContainer" class="p-4 flex items-center justify-center min-h-[256px] rounded-xl border border-white/10 bg-black/40">
-            <p class="text-green-600">&gt; BYT SYSTEM READY</p>
-          </div>
-        </div>
+    <!-- ===== HOME ===== -->
+    <section id="home" class="tab active section-bg" style="background-image:url('https://i.postimg.cc/X7Z3nzfn/Download-25.jpg');">
+      <div class="text-center py-20">
+        <h2 class="text-4xl md:text-6xl font-bold mb-4">Willkommen im BYT BOT HUB</h2>
+        <p class="text-lg md:text-xl text-gray-300">Dein Control-Center für Commands, Infos, Support und den IMG Generator</p>
       </div>
     </section>
 
     <!-- ===== COMMANDS ===== -->
-    <section id="commands" class="tab">
-      <div class="card p-6 space-y-4">
-        <h2 class="text-xl font-bold mb-2">📜 Befehlsliste</h2>
-        <div id="cmdCategories" class="grid md:grid-cols-2 gap-6 mt-6"></div>
+    <section id="commands" class="tab section-bg" style="background-image:url('https://i.postimg.cc/MpVSQf34/Material.jpg');">
+      <div class="card">
+        <h2 class="text-2xl font-bold mb-3">📜 Commands</h2>
+        <div id="commandsList" class="commands-wrap"></div>
       </div>
     </section>
 
-<!-- ...existing code... -->
-<section id="info" class="tab">
-  <div class="card p-6">
-    <h2 class="text-xl font-bold mb-2">🤖 Bot Infos</h2>
-    <p>
-      <b>BYT BOT</b> ist ein moderner WhatsApp-Multifunktionsbot mit Fokus auf Gruppen, Spaß und Automatisierung.<br><br>
-      <b>👨‍💻 Entwickler:</b> <span class="font-mono">BYT (Mika)</span><br>
-      <b>🗓️ Erstellt:</b> 2023, kontinuierlich weiterentwickelt<br>
-      <b>🌐 Plattform:</b> Node.js, Baileys (WhatsApp Web API), eigene Erweiterungen<br>
-      <b>🔧 Technik:</b>
-      <ul class="list-disc ml-6">
-        <li>Programmiersprache: <b>JavaScript (Node.js)</b></li>
-        <li>Framework: <b>Baileys</b> (WhatsApp Web API)</li>
-        <li>Features: Casino, Gruppenverwaltung, Medien, Fun, XP-System, Tickets, uvm.</li>
-        <li>Speichert Userdaten, XP, Coins, Warnungen, Blacklist, Geburtstage, uvm.</li>
-        <li>Eigene APIs & viele externe Schnittstellen (NASA, Giphy, Unsplash, Wikipedia, etc.)</li>
-        <li>Automatische Willkommens-/Goodbye-Nachrichten, Anti-Link, Anti-Join, Slowmode, ...</li>
-        <li>Sticker-Generator, Musik-Downloader, Meme, Anime, Wetter, Übersetzer, ...</li>
-        <li>Casino: Slot, Roulette, Coinflip, Glücksrad, Bank, Pay, Prestige, ...</li>
-        <li>Interaktionen: hug, kiss, slap, poke, cuddle, uvm. (mit GIFs/Bildern)</li>
-        <li>Support-/Ticket-System, Broadcast, Gruppenklonen, Admin-Tools</li>
-      </ul>
-      <b>🔒 Sicherheit:</b> Blacklist, Global-Ban, Anti-Spam, Owner- und Admin-Checks<br>
-      <b>📈 XP & Level:</b> Aktives XP-/Level-/Prestige-System mit Coins, Streaks und Leaderboard<br>
-      <b>🎲 Spaß:</b> Über 200+ Commands, viele Checks, Fun-Features, Zufallsfakten, Sprüche, ...<br>
-      <b>🛠️ Wartung:</b> <span class="font-mono">BYT</span> (Mika) – <a href="mailto:byt666@gmx.de" class="text-blue-400 underline">Support</a><br>
-      <b>🔗 GitHub:</b> <a href="https://github.com/byt666-bot/Bot-WhatsApp-Hidetag" class="text-blue-400 underline" target="_blank">Quellcode</a>
-      <br><br>
-      <b>Letztes Update:</b> August 2025<br>
-      <b>Status:</b> <span class="text-green-500 font-bold">Online</span>
-    </p>
-  </div>
-</section>
+    <!-- ===== IMAGE GENERATOR ===== -->
+    <section id="imggen" class="tab section-bg" style="background-image:url('https://i.postimg.cc/J49805xZ/Download-24.jpg');">
+      <div class="card">
+        <h2 class="text-2xl font-bold mb-3">🖼️ BYT IMG MAKER</h2>
+        <textarea id="promptInput" placeholder="> Beschreibe dein Bild..." class="w-full h-32 p-3 bg-black border border-gray-700 rounded mb-3"></textarea>
+        <div class="flex gap-3 mb-3">
+          <button id="generateButton" class="btn">&gt; Bild generieren</button>
+          <button id="clearPrompt" class="btn">Clear</button>
+        </div>
+        <div id="loadingIndicator" class="hidden text-gray-400 font-medium mb-2">[*] Dein Bild wird generiert...</div>
+        <div id="imageContainer" class="card"> &gt; Ready </div>
+      </div>
+    </section>
+
+    <!-- ===== INFO ===== -->
+    <section id="info" class="tab section-bg" style="background-image:url('https://i.postimg.cc/HLmC4WfL/darkbild1.jpg');">
+      <div class="card">
+        <h2 class="text-2xl font-bold mb-3">🤖 Bot Infos</h2>
+        <p>Der BYT BOT ist dein multifunktionaler Begleiter mit Commands, Casino, Support und vielem mehr.</p>
+      </div>
+    </section>
 
     <!-- ===== SUPPORT ===== -->
-    <section id="support" class="tab">
-      <div class="card p-6 space-y-3">
-        <h2 class="text-xl font-bold">🛟 Support</h2>
-        <form id="supportForm" class="space-y-2">
-          <input id="supportMsg" class="w-full text-black p-2 rounded" placeholder="Deine Nachricht an den Support…">
-          <div class="flex gap-2">
-            <button type="submit" class="btn border-green-700">Per Mail senden</button>
-            <a id="mailtoLink" href="#" class="btn">Mailto</a>
-          </div>
-        </form>
-        <p id="supportStatus" class="text-sm"></p>
+    <section id="support" class="tab section-bg" style="background-image:url('https://i.postimg.cc/HLmC4WfL/darkbild1.jpg');">
+      <div class="card">
+        <h2 class="text-2xl font-bold mb-3">🛟 Support</h2>
+        <p>Bei Problemen erreichst du uns via: <a href="mailto:byt666@gmx.de" class="text-gray-300 hover:underline">byt666@gmx.de</a></p>
       </div>
     </section>
   </main>
 
   <footer class="max-w-6xl mx-auto px-4 py-10 text-center text-xs text-gray-500">
-    BYT BOT © 2025
+    BYT BOT © 2025 
   </footer>
 
   <script>
@@ -134,75 +145,40 @@
     function switchTab(id){
       $$('.tab').forEach(n=>n.classList.remove('active'));
       $('#'+id).classList.add('active');
-      $$('.tablink').forEach(b=>b.classList.toggle('border-green-700', b.dataset.tab===id));
+      $$('.tablink').forEach(b=>b.classList.remove('active'));
+      $$('.tablink').forEach(b=>{ if(b.dataset.tab===id){ b.classList.add('active'); } });
     }
-    $$('.tablink').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.tab)));
-
-    /* ===== Vollständige Command-Liste ===== */
-  const COMMANDS = [
-    ".ping",".hi",".echo <txt>",".quote",".joke",".fact",".funfact",".name",
-    ".passwort [länge]",".farbe",".zufall",".random <min> <max>",".emoji",
-    ".slot",".poker",".gd",".bgo <zahl>",".coinflip",".roll",".calc <expr>",
-    ".wiki <suchbegriff>",".shorten <url>",".cat",".dog",".tier",".city",".art",
-    ".anime",".gif <Suchbegriff>",".dadjoke",".fortune",".motivate",".chuck",
-    ".wetter <stadt>",".reverse <Text>",".sarcasm <Text>",".uwu <Text>",
-    ".count <Wort>",".calcimg <Rechnung>",".rate <Text>",".mock <Text>",
-    ".insultme",".wop <cat> <t/d>",".8ball <frage>",".play <song>",".adminlist",
-    ".members",".groupinfo",".setdesc <txt>",".setsubject <txt>",".kick @user",
-    ".promote @user",".demote @user",".warn @user [grund]",
-    ".delwarn <nr> @user",".resetwarn @user",".listwarns @user",
-    ".hidetag [txt]",".tagall <txt>",".hugall",".open",".close",".open4 <hh:mm>",
-    ".close4 <min>",".antijoin <nr>",".allowjoin <nr>",".kickfor <min> @u",
-    ".banfor <min> @u",".bannchat",".unbannchat",".getgroupinvite",".sticker",
-    ".reg Name.Alter",".me",".userinfo @user",".owner",".simpcheck @user",
-    ".cringecheck @user",".luckcheck @user",".richcheck @user",
-    ".sleepycheck @user",".suscheck @user",".waifu @user",".animal @user",
-    ".superpower @user",".job @user",".catfact",".dogfact",".hug @user",
-    ".kiss @user",".pat @user",".cuddle @user",".slap @user",".poke @user",
-    ".bite @user",".glomp @user",".fuck @user",".toterrizz @user",
-    ".fakehack @user",".coinrain",".highfive @user",".boop @user",".bonk @user",
-    ".wave @user",".blush @user",".cry @user",".dance @user",".facepalm @user",
-    ".cheer @user",".stare @user",".tickle @user",".sleep @user",".applaud @user",
-    ".scare @user",".gift @user",".coffee @user",".pizza @user",".beer @user",
-    ".cookie @user",".flower @user",".respect @user",".hugall",".kissall",
-    ".patall",".cuddleall",".slapall",".pokeall",".biteall",".snuggleall",
-    ".glompall",".slot <einsatz>",".coin <einsatz> <kopf/zahl>",
-    ".jackpot <einsatz>",".dice <einsatz>",".bank",".pay @user <betrag>",
-    ".support <Nachricht>",".ticket <Ticket-ID>",".reply <ID> <Antwort>",
-    ".mytickets",".apod",".launches",".iss",".neo",".solar",".earthimg <lat> <lon>",
-    ".marsweather"
-  ];
-
-  function buildCommands(){
-    const wrap = document.getElementById('cmdCategories');
-    if(!wrap) return;
-    wrap.innerHTML = '';
-    wrap.className = "grid md:grid-cols-2 lg:grid-cols-3 gap-4"; // Grid layout
-
-    COMMANDS.forEach(cmd=>{
-      const box = document.createElement('div');
-      box.className = 'p-3 rounded-lg border border-white/10 bg-black/40 hover:border-green-500 transition';
-      box.innerHTML = `<code class="text-green-400">${cmd}</code>`;
-      wrap.appendChild(box);
-    });
-  }
-
-  buildCommands();
-
-    /* ===== Support ===== */
-    document.getElementById('supportForm').addEventListener('submit', e=>{
+    $$('.tablink').forEach(btn=>btn.addEventListener('click',(e)=>{
       e.preventDefault();
-      const m = document.getElementById('supportMsg').value.trim();
-      if(!m){
-        document.getElementById('supportStatus').textContent = "❗ Bitte Nachricht eingeben.";
-        return;
-      }
-      const subject = encodeURIComponent('BYT Support');
-      const body = encodeURIComponent(m);
-      const href = `mailto:byt666@gmx.de?subject=${subject}&body=${body}`;
-      document.getElementById('mailtoLink').setAttribute('href', href);
-      document.getElementById('supportStatus').textContent = "✉️ Öffne dein Mail-Programm…";
-      window.open(href, '_blank');
+      switchTab(btn.dataset.tab);
+    }));
+
+    /* ===== Commands ===== */
+    const COMMANDS = [
+      ".ping",".hi",".echo <txt>",".quote",".joke",".fact",".funfact",".name",
+      ".passwort [länge]",".farbe",".zufall",".random <min> <max>",".emoji",
+      ".slot",".poker",".gd",".bgo <zahl>",".coinflip",".roll",".calc <expr>",
+      ".wiki <suchbegriff>",".shorten <url>",".cat",".dog",".tier",".city",
+      ".art",".anime",".gif <Suchbegriff>",".dadjoke",".fortune",".motivate",
+      ".chuck",".wetter <stadt>",".reverse <Text>",".sarcasm <Text>",".uwu <Text>",
+      ".count <Wort>",".calcimg <Rechnung>",".rate <Text>",".mock <Text>",
+      ".insultme",".8ball <frage>",".play <song>",".sticker / .s",
+      ".adminlist",".members",".groupinfo",".setdesc <txt>",".setsubject <txt>",
+      ".kick @user",".promote @user",".demote @user",".warn @user [grund]",
+      ".resetwarn @user",".hidetag [txt]",".tagall <txt>",".hugall",".open",".close",
+      ".userinfo @user",".owner",".simpcheck @user",".cringecheck @user",
+      ".luckcheck @user",".suscheck @user",".waifu @user",".animal @user",
+      ".hug @user",".kiss @user",".pat @user",".slap @user",".coffee @user",".beer @user",
+      ".cookie @user",".respect @user",".slot <einsatz>",".coin <einsatz>",".jackpot <einsatz>",
+      ".dice <einsatz>",".bank",".pay @user <betrag>",".support <msg>",".ticket <id>",
+      ".apod",".launches",".iss",".neo",".solar",".earthimg <lat> <lon>",".marsweather"
+    ];
+    const cmdWrap = document.getElementById('commandsList');
+    COMMANDS.forEach(c=>{
+      const card=document.createElement('div');
+      card.className="cmd-card";
+      card.textContent=c;
+      cmdWrap.appendChild(card);
     });
 
     /* ===== Image Generator (Backend) ===== */
@@ -216,7 +192,7 @@
     generateButton?.addEventListener('click', async ()=>{
       const userPrompt = promptInput.value.trim();
       if(!userPrompt){
-        imageContainer.innerHTML = '<p class="text-red-500">[!] Bitte gib eine Bildbeschreibung ein.</p>';
+        imageContainer.innerHTML = '<p style="color:red">[!] Bitte gib eine Bildbeschreibung ein.</p>';
         return;
       }
       generateButton.disabled = true;
@@ -231,21 +207,20 @@
           body: JSON.stringify({ prompt: userPrompt })
         });
         const result = await r.json();
-
         if(result.predictions?.[0]?.bytesBase64Encoded){
           const base64 = result.predictions[0].bytesBase64Encoded;
           const url = `data:image/png;base64,${base64}`;
           const img = new Image();
           img.src = url;
           img.alt = userPrompt;
-          img.className = 'max-w-full h-auto rounded-xl';
+          img.style="max-width:100%;border-radius:6px;";
           imageContainer.appendChild(img);
         } else {
-          imageContainer.innerHTML = '<p class="text-red-500">[!] Fehler beim Generieren.</p>';
+          imageContainer.innerHTML = '<p style="color:red">[!] Fehler beim Generieren.</p>';
           console.warn(result);
         }
-      } catch (e) {
-        imageContainer.innerHTML = '<p class="text-red-500">[!] Unerwarteter Fehler.</p>';
+      } catch(e){
+        imageContainer.innerHTML = '<p style="color:red">[!] Unerwarteter Fehler.</p>';
         console.error(e);
       } finally {
         generateButton.disabled = false;
