@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
@@ -11,15 +11,15 @@
   <style>
     :root{--bg:#0b0b0b;--panel:#131313;--panel-2:#1a1a1a;--accent:#00ff99;--accent-2:#22d3ee;--muted:#8b8b8b;}
     html,body{height:100%}
-    body{font-family: "JetBrains Mono", monospace;background:radial-gradient(1200px 600px at 10% -10%, rgba(0,255,153,.07), transparent),radial-gradient(900px 500px at 110% 0%, rgba(34,211,238,.06), transparent),var(--bg);color:#e0e0e0}
-    .neon{ text-shadow: 0 0 8px var(--accent), 0 0 16px rgba(0,255,153,.35)}
-    .glow{ box-shadow: 0 0 0 1px rgba(0,255,153,.25), 0 0 30px rgba(0,255,153,.12) inset }
-    .card{ background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.2)); border:1px solid rgba(255,255,255,.1); border-radius:1rem }
-    .btn{ background:#111;border:1px solid #2a2a2a;border-radius:.75rem;padding:.7rem 1rem }
-    .btn:hover{ background:#171717 }
-    .tab{ display:none }
-    .tab.active{ display:block }
-    mark{ background: rgba(34,197,94,.25); padding: 0 .25rem; border-radius:.3rem }
+    body{font-family:"JetBrains Mono",monospace;background:radial-gradient(1200px 600px at 10% -10%, rgba(0,255,153,.07), transparent),radial-gradient(900px 500px at 110% 0%, rgba(34,211,238,.06), transparent),var(--bg);color:#e0e0e0}
+    .neon{text-shadow:0 0 8px var(--accent),0 0 16px rgba(0,255,153,.35)}
+    .glow{box-shadow:0 0 0 1px rgba(0,255,153,.25),0 0 30px rgba(0,255,153,.12) inset}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.2));border:1px solid rgba(255,255,255,.1);border-radius:1rem}
+    .btn{background:#111;border:1px solid #2a2a2a;border-radius:.75rem;padding:.7rem 1rem}
+    .btn:hover{background:#171717}
+    .tab{display:none}
+    .tab.active{display:block}
+    mark{background:rgba(34,197,94,.25);padding:0 .25rem;border-radius:.3rem}
   </style>
 </head>
 <body class="min-h-screen">
@@ -31,8 +31,6 @@
       </div>
       <nav class="flex flex-wrap gap-2">
         <button class="btn tablink" data-tab="home">Home</button>
-        <button class="btn tablink" data-tab="slots">Slots</button>
-        <button class="btn tablink" data-tab="roulette">Roulette</button>
         <button class="btn tablink" data-tab="commands">Commands</button>
         <button class="btn tablink" data-tab="info">Bot Infos</button>
         <button class="btn tablink" data-tab="support">Support</button>
@@ -59,16 +57,39 @@
             <p class="text-green-600">&gt; BYT SYSTEM READY</p>
           </div>
         </div>
-        <p class="text-xs text-muted mt-3"></p>
       </div>
     </section>
 
-    <!-- andere Tabs unverändert -->
-    <section id="slots" class="tab"><div class="card p-6">🎰 Slots kommen hier …</div></section>
-    <section id="roulette" class="tab"><div class="card p-6">🎡 Roulette kommt hier …</div></section>
-    <section id="commands" class="tab"><div class="card p-6">📜 Commands …</div></section>
-    <section id="info" class="tab"><div class="card p-6">🤖 Bot Infos …</div></section>
-    <section id="support" class="tab"><div class="card p-6">🛟 Support …</div></section>
+    <!-- ===== COMMANDS ===== -->
+    <section id="commands" class="tab">
+      <div class="card p-6 space-y-4">
+        <h2 class="text-xl font-bold mb-2">📜 Befehlsliste</h2>
+        <div id="cmdCategories" class="grid md:grid-cols-2 gap-6 mt-6"></div>
+      </div>
+    </section>
+
+    <!-- ===== INFO ===== -->
+    <section id="info" class="tab">
+      <div class="card p-6">
+        <h2 class="text-xl font-bold mb-2">🤖 Bot Infos</h2>
+        <p>BYT BOT – Casino, Fun & Tools im Browser. Für persistente Coins pro User/IP empfehle ich ein kleines Node-Backend mit <code>money.json</code> & E-Mail-Versand.</p>
+      </div>
+    </section>
+
+    <!-- ===== SUPPORT ===== -->
+    <section id="support" class="tab">
+      <div class="card p-6 space-y-3">
+        <h2 class="text-xl font-bold">🛟 Support</h2>
+        <form id="supportForm" class="space-y-2">
+          <input id="supportMsg" class="w-full text-black p-2 rounded" placeholder="Deine Nachricht an den Support…">
+          <div class="flex gap-2">
+            <button type="submit" class="btn border-green-700">Per Mail senden</button>
+            <a id="mailtoLink" href="#" class="btn" download>mailto</a>
+          </div>
+        </form>
+        <p id="supportStatus" class="text-sm"></p>
+      </div>
+    </section>
   </main>
 
   <footer class="max-w-6xl mx-auto px-4 py-10 text-center text-xs text-gray-500">
@@ -79,7 +100,7 @@
     const $ = (q)=>document.querySelector(q);
     const $$ = (q)=>document.querySelectorAll(q);
 
-    /* ===== Tabs ===== */
+    // ===== Tabs =====
     function switchTab(id){
       $$('.tab').forEach(n=>n.classList.remove('active'));
       $('#'+id).classList.add('active');
@@ -87,14 +108,48 @@
     }
     $$('.tablink').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.tab)));
 
-    /* ===== Image Generator via Backend ===== */
-    const promptInput = $('#promptInput');
-    const generateButton = $('#generateButton');
-    const loadingIndicator = $('#loadingIndicator');
-    const imageContainer = $('#imageContainer');
+    // ===== COMMANDS =====
+    const COMMANDS = [
+      { title:'BASIS', items:['.ping','.hi','.echo <txt>','.quote','.joke','.fact','.funfact','.name','.passwort [länge]','.farbe','.zufall','.random <min> <max>','.emoji','.slot','.poker','.gd','.bgo <zahl>','.coinflip','.roll','.calc <expr>','.wiki <suchbegriff>','.shorten <url>'] },
+      { title:'FUN & MEDIA', items:['.cat','.dog','.tier','.city','.art','.anime','.gif <Suchbegriff>','.dadjoke','.fortune','.motivate','.chuck','.wetter <stadt>','.reverse <Text>','.sarcasm <Text>','.uwu <Text>','.count <Wort>','.calcimg <Rechnung>','.rate <Text>','.mock <Text>','.insultme'] },
+      { title:'GRUPPE & ADMIN', items:['.adminlist','.members','.groupinfo','.setdesc <txt>','.setsubject <txt>','.kick @user','.promote @user','.demote @user','.warn @user [grund]','.delwarn <nr> @user','.resetwarn @user','.listwarns @user','.hidetag [txt]','.tagall <txt>','.hugall','.open','.close','.open4 <hh:mm>','.close4 <min>','.antijoin <nr>','.allowjoin <nr>','.kickfor <min> @u','.banfor <min> @u','.bannchat','.unbannchat','.getgroupinvite'] },
+      { title:'USER & CHECKS', items:['.reg Name.Alter','.me','.userinfo @user','.owner','.luisa','.simpcheck @user','.cringecheck @user','.luckcheck @user','.richcheck @user','.sleepycheck @user','.suscheck @user','.waifu @user','.animal @user','.superpower @user','.job @user','.catfact','.dogfact'] },
+      { title:'INTERAKTIONEN', items:['.hug @user','.kiss / .kuss @user','.pat @user','.cuddle @user','.slap @user','.poke @user','.bite @user','.glomp @user','.fuck @user','.toterrizz @user','.fakehack @user','.coinrain','.highfive @user','.boop @user','.bonk @user','.wave @user','.blush @user','.cry @user','.dance @user','.facepalm @user','.cheer @user','.stare @user','.tickle @user','.sleep @user','.applaud @user','.scare @user','.gift @user','.coffee @user','.pizza @user','.beer @user','.cookie @user','.flower @user','.respect @user','.hugall','.kissall','.patall','.cuddleall','.slapall','.pokeall','.biteall','.snuggleall','.glompall'] },
+      { title:'CASINO & GLÜCKSSPIEL', items:['.slot <einsatz>','.coin <einsatz> <kopf/zahl>','.jackpot <einsatz>','.dice <einsatz>','.gd','.bgo <zahl>','.roll','.bank','.pay @user <betrag>'] },
+      { title:'SUPPORT MENÜ', items:['.support <Nachricht> — Kontakt zum Support-Team','.ticket <Ticket-ID> — Zeigt den Ticket-Status','.reply <ID> <Antwort> — Antwort auf ein Ticket','.mytickets — Zeigt deine Tickets'] },
+      { title:'NASA & WELTRAUM', items:['.apod — Astronomy Picture of the Day','.launches — Nächste Raketenstarts','.iss — Live-Position der ISS','.neo — Asteroiden in Erdnähe','.solar — Sonnenaktivität','.earthimg <lat> <lon>','.marsweather — Wetter auf dem Mars','.techstats — NASA Systemstatus'] }
+    ];
+    function buildCommands(){
+      const wrap = document.getElementById('cmdCategories'); wrap.innerHTML='';
+      COMMANDS.forEach(cat=>{
+        const div = document.createElement('div');
+        div.className='hud p-4 rounded-xl';
+        div.innerHTML = `<h3 class="font-semibold mb-2">⧉═════[ ${cat.title} ]═════⧉</h3>` +
+          '<ul class="space-y-1 text-sm">' + cat.items.map(i=>`<li class="border-b border-white/5 pb-1">${i}</li>`).join('') + '</ul>';
+        wrap.appendChild(div);
+      });
+    }
+    buildCommands();
 
-    $('#clearPrompt')?.addEventListener('click',()=>{ promptInput.value=''; });
+    // ===== SUPPORT =====
+    document.getElementById('supportForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const m = document.getElementById('supportMsg').value.trim();
+      if(!m){ document.getElementById('supportStatus').textContent = "❗ Bitte Nachricht eingeben."; return; }
+      const subject = encodeURIComponent('BYT Support');
+      const body = encodeURIComponent(m);
+      const href = `mailto:byt666@gmx.de?subject=${subject}&body=${body}`;
+      document.getElementById('mailtoLink').setAttribute('href', href);
+      document.getElementById('supportStatus').textContent = "✉️ Öffne dein Mail-Programm…";
+      window.open(href, '_blank');
+    });
 
+    // ===== IMAGE GENERATOR =====
+    const promptInput = document.getElementById('promptInput');
+    const generateButton = document.getElementById('generateButton');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const imageContainer = document.getElementById('imageContainer');
+    document.getElementById('clearPrompt')?.addEventListener('click',()=>{ promptInput.value=''; });
     generateButton?.addEventListener('click', async ()=>{
       const userPrompt = promptInput.value.trim();
       if(!userPrompt){
@@ -105,7 +160,6 @@
       generateButton.textContent = '> Generating...';
       loadingIndicator.classList.remove('hidden');
       imageContainer.innerHTML = '';
-
       try {
         const r = await fetch("https://byt666-backend.onrender.com/api/generate", {
           method: "POST",
@@ -113,7 +167,6 @@
           body: JSON.stringify({ prompt: userPrompt })
         });
         const result = await r.json();
-
         if(result.predictions?.[0]?.bytesBase64Encoded){
           const base64 = result.predictions[0].bytesBase64Encoded;
           const url = `data:image/png;base64,${base64}`;
