@@ -9,11 +9,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#0b0b0b;--panel:#131313;--panel-2:#1a1a1a;--accent:#00ff99;--accent-2:#22d3ee;--muted:#8b8b8b;}
+    :root{--bg:#0b0b0b;--accent:#00ff99;}
     html,body{height:100%}
-    body{font-family:"JetBrains Mono",monospace;background:radial-gradient(1200px 600px at 10% -10%, rgba(0,255,153,.07), transparent),radial-gradient(900px 500px at 110% 0%, rgba(34,211,238,.06), transparent),var(--bg);color:#e0e0e0}
+    body{
+      font-family:"JetBrains Mono",monospace;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(0,255,153,.07), transparent),
+        radial-gradient(900px 500px at 110% 0%, rgba(34,211,238,.06), transparent),
+        var(--bg);
+      color:#e0e0e0
+    }
     .neon{text-shadow:0 0 8px var(--accent),0 0 16px rgba(0,255,153,.35)}
-    .glow{box-shadow:0 0 0 1px rgba(0,255,153,.25),0 0 30px rgba(0,255,153,.12) inset}
     .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.2));border:1px solid rgba(255,255,255,.1);border-radius:1rem}
     .btn{background:#111;border:1px solid #2a2a2a;border-radius:.75rem;padding:.7rem 1rem}
     .btn:hover{background:#171717}
@@ -27,7 +33,7 @@
     <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-3 h-3 rounded-full" style="background:var(--accent);"></div>
-        <h1 class="text-xl md:text-2xl font-bold glitch neon" data-text="BYT BOT HUB">BYT BOT HUB</h1>
+        <h1 class="text-xl md:text-2xl font-bold neon">BYT BOT HUB</h1>
       </div>
       <nav class="flex flex-wrap gap-2">
         <button class="btn tablink" data-tab="home">Home</button>
@@ -53,7 +59,7 @@
             </div>
             <div id="loadingIndicator" class="hidden text-green-400 font-medium">[*] Dein Bild wird generiert...</div>
           </div>
-          <div id="imageContainer" class="hud p-4 flex items-center justify-center min-h-[256px] rounded-xl">
+          <div id="imageContainer" class="p-4 flex items-center justify-center min-h-[256px] rounded-xl border border-white/10 bg-black/40">
             <p class="text-green-600">&gt; BYT SYSTEM READY</p>
           </div>
         </div>
@@ -84,7 +90,7 @@
           <input id="supportMsg" class="w-full text-black p-2 rounded" placeholder="Deine Nachricht an den Support…">
           <div class="flex gap-2">
             <button type="submit" class="btn border-green-700">Per Mail senden</button>
-            <a id="mailtoLink" href="#" class="btn" download>mailto</a>
+            <a id="mailtoLink" href="#" class="btn">Mailto</a>
           </div>
         </form>
         <p id="supportStatus" class="text-sm"></p>
@@ -93,14 +99,14 @@
   </main>
 
   <footer class="max-w-6xl mx-auto px-4 py-10 text-center text-xs text-gray-500">
-    BYT BOT © 2025 
+    BYT BOT © 2025
   </footer>
 
   <script>
     const $ = (q)=>document.querySelector(q);
     const $$ = (q)=>document.querySelectorAll(q);
 
-    // ===== Tabs =====
+    /* ===== Tabs ===== */
     function switchTab(id){
       $$('.tab').forEach(n=>n.classList.remove('active'));
       $('#'+id).classList.add('active');
@@ -108,34 +114,127 @@
     }
     $$('.tablink').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.tab)));
 
-    // ===== COMMANDS =====
+    /* ===== Vollständige Command-Liste ===== */
     const COMMANDS = [
-      { title:'BASIS', items:['.ping','.hi','.echo <txt>','.quote','.joke','.fact','.funfact','.name','.passwort [länge]','.farbe','.zufall','.random <min> <max>','.emoji','.slot','.poker','.gd','.bgo <zahl>','.coinflip','.roll','.calc <expr>','.wiki <suchbegriff>','.shorten <url>'] },
-      { title:'FUN & MEDIA', items:['.cat','.dog','.tier','.city','.art','.anime','.gif <Suchbegriff>','.dadjoke','.fortune','.motivate','.chuck','.wetter <stadt>','.reverse <Text>','.sarcasm <Text>','.uwu <Text>','.count <Wort>','.calcimg <Rechnung>','.rate <Text>','.mock <Text>','.insultme'] },
-      { title:'GRUPPE & ADMIN', items:['.adminlist','.members','.groupinfo','.setdesc <txt>','.setsubject <txt>','.kick @user','.promote @user','.demote @user','.warn @user [grund]','.delwarn <nr> @user','.resetwarn @user','.listwarns @user','.hidetag [txt]','.tagall <txt>','.hugall','.open','.close','.open4 <hh:mm>','.close4 <min>','.antijoin <nr>','.allowjoin <nr>','.kickfor <min> @u','.banfor <min> @u','.bannchat','.unbannchat','.getgroupinvite'] },
-      { title:'USER & CHECKS', items:['.reg Name.Alter','.me','.userinfo @user','.owner','.luisa','.simpcheck @user','.cringecheck @user','.luckcheck @user','.richcheck @user','.sleepycheck @user','.suscheck @user','.waifu @user','.animal @user','.superpower @user','.job @user','.catfact','.dogfact'] },
-      { title:'INTERAKTIONEN', items:['.hug @user','.kiss / .kuss @user','.pat @user','.cuddle @user','.slap @user','.poke @user','.bite @user','.glomp @user','.fuck @user','.toterrizz @user','.fakehack @user','.coinrain','.highfive @user','.boop @user','.bonk @user','.wave @user','.blush @user','.cry @user','.dance @user','.facepalm @user','.cheer @user','.stare @user','.tickle @user','.sleep @user','.applaud @user','.scare @user','.gift @user','.coffee @user','.pizza @user','.beer @user','.cookie @user','.flower @user','.respect @user','.hugall','.kissall','.patall','.cuddleall','.slapall','.pokeall','.biteall','.snuggleall','.glompall'] },
-      { title:'CASINO & GLÜCKSSPIEL', items:['.slot <einsatz>','.coin <einsatz> <kopf/zahl>','.jackpot <einsatz>','.dice <einsatz>','.gd','.bgo <zahl>','.roll','.bank','.pay @user <betrag>'] },
-      { title:'SUPPORT MENÜ', items:['.support <Nachricht> — Kontakt zum Support-Team','.ticket <Ticket-ID> — Zeigt den Ticket-Status','.reply <ID> <Antwort> — Antwort auf ein Ticket','.mytickets — Zeigt deine Tickets'] },
-      { title:'NASA & WELTRAUM', items:['.apod — Astronomy Picture of the Day','.launches — Nächste Raketenstarts','.iss — Live-Position der ISS','.neo — Asteroiden in Erdnähe','.solar — Sonnenaktivität','.earthimg <lat> <lon>','.marsweather — Wetter auf dem Mars','.techstats — NASA Systemstatus'] }
+      {
+        title:"BASIS-BEFEHLE",
+        items:[
+          ".ping",".hi",".echo <txt>",".quote",".joke",".fact",".funfact",".name",
+          ".passwort [länge]",".farbe",".zufall",".random <min> <max>",".emoji",
+          ".slot",".poker",".gd",".bgo <zahl>",".coinflip",".roll",".calc <expr>",
+          ".wiki <suchbegriff>",".shorten <url>"
+        ]
+      },
+      {
+        title:"FUN & MEDIA",
+        items:[
+          ".cat",".dog",".tier",".city",".art",".anime",".gif <Suchbegriff>",
+          ".dadjoke",".fortune",".motivate",".chuck",".wetter <stadt>",
+          ".reverse <Text>",".sarcasm <Text>",".uwu <Text>",".count <Wort>",
+          ".calcimg <Rechnung>",".rate <Text>",".mock <Text>",".insultme"
+        ]
+      },
+      {
+        title:"GRUPPE & ADMIN",
+        items:[
+          ".adminlist",".members",".groupinfo",".setdesc <txt>",".setsubject <txt>",
+          ".kick @user",".promote @user",".demote @user",".warn @user [grund]",
+          ".delwarn <nr> @user",".resetwarn @user",".listwarns @user",".hidetag [txt]",
+          ".tagall <txt>",".hugall",".open",".close",".open4 <hh:mm>",".close4 <min>",
+          ".antijoin <nr>",".allowjoin <nr>",".kickfor <min> @u",".banfor <min> @u",
+          ".bannchat",".unbannchat",".getgroupinvite"
+        ]
+      },
+      {
+        title:"STICKER & SPIELE",
+        items:[
+          ".sticker / .s",".wop <cat> <t/d>",".8ball <frage>",".play <song>"
+        ]
+      },
+      {
+        title:"USER & CHECKS",
+        items:[
+          ".reg Name.Alter",".me",".userinfo @user",".owner",".luisa"
+        ]
+      },
+      {
+        title:"CHECKS & FUN",
+        items:[
+          ".simpcheck @user",".cringecheck @user",".luckcheck @user",".richcheck @user",
+          ".sleepycheck @user",".suscheck @user",".waifu @user",".animal @user",
+          ".superpower @user",".job @user",".catfact",".dogfact"
+        ]
+      },
+      {
+        title:"INTERAKTIONEN",
+        items:[
+          ".hug @user",".kiss / .kuss @user",".pat @user",".cuddle @user",".slap @user",
+          ".poke @user",".bite @user",".glomp @user",".fuck @user",".toterrizz @user",
+          ".fakehack @user",".coinrain",".highfive @user",".boop @user",".bonk @user",
+          ".wave @user",".blush @user",".cry @user",".dance @user",".facepalm @user",
+          ".cheer @user",".stare @user",".tickle @user",".sleep @user",".applaud @user",
+          ".scare @user",".gift @user",".coffee @user",".pizza @user",".beer @user",
+          ".cookie @user",".flower @user",".respect @user",".hugall",".kissall",
+          ".patall",".cuddleall",".slapall",".pokeall",".biteall",".snuggleall",".glompall"
+        ]
+      },
+      {
+        title:"CASINO & GLÜCKSSPIEL",
+        items:[
+          ".slot <einsatz>",".coin <einsatz> <kopf/zahl>",".jackpot <einsatz>",".dice <einsatz>",
+          ".gd",".bgo <zahl>",".roll",".bank",".pay @user <betrag>",
+          "Tipp: Gewinne Coins & XP und steigere dein Level!"
+        ]
+      },
+      {
+        title:"SUPPORT MENÜ",
+        items:[
+          ".support <Nachricht> — Kontakt zum Support-Team",
+          ".ticket <Ticket-ID> — Zeigt den Ticket-Status",
+          ".reply <ID> <Antwort> — Antwort auf ein Ticket",
+          ".mytickets — Zeigt deine Tickets"
+        ]
+      },
+      {
+        title:"NASA & WELTRAUM",
+        items:[
+          ".apod — Astronomy Picture of the Day – Bild + Erklärung des Tages",
+          ".launches — Nächste Raketenstarts mit Ort & Zeit",
+          ".iss — Live-Position der ISS + Google-Maps-Link",
+          ".neo — Asteroiden in Erdnähe (nächste Tage)",
+          ".solar — Sonnenaktivität (Stürme, Flecken etc.)",
+          ".earthimg <lat> <lon> — Satellitenbild von Koordinaten (z. B. .earthimg 52.52 13.40)",
+          ".marsweather — Aktuelles Wetter vom Mars (InSight Rover)",
+          ".techstats — NASA Systemstatus / Tech Projekte"
+        ]
+      }
     ];
+
     function buildCommands(){
-      const wrap = document.getElementById('cmdCategories'); wrap.innerHTML='';
+      const wrap = document.getElementById('cmdCategories');
+      if(!wrap) return;
+      wrap.innerHTML = '';
       COMMANDS.forEach(cat=>{
-        const div = document.createElement('div');
-        div.className='hud p-4 rounded-xl';
-        div.innerHTML = `<h3 class="font-semibold mb-2">⧉═════[ ${cat.title} ]═════⧉</h3>` +
-          '<ul class="space-y-1 text-sm">' + cat.items.map(i=>`<li class="border-b border-white/5 pb-1">${i}</li>`).join('') + '</ul>';
-        wrap.appendChild(div);
+        const box = document.createElement('div');
+        box.className = 'p-4 rounded-xl border border-white/10 bg-black/30';
+        box.innerHTML =
+          `<h3 class="font-semibold mb-2">⧉═════[ ${cat.title} ]═════⧉</h3>` +
+          '<ul class="space-y-1 text-sm">' +
+          cat.items.map(i=>`<li class="border-b border-white/5 pb-1">${i}</li>`).join('') +
+          '</ul>';
+        wrap.appendChild(box);
       });
     }
     buildCommands();
 
-    // ===== SUPPORT =====
+    /* ===== Support ===== */
     document.getElementById('supportForm').addEventListener('submit', e=>{
       e.preventDefault();
       const m = document.getElementById('supportMsg').value.trim();
-      if(!m){ document.getElementById('supportStatus').textContent = "❗ Bitte Nachricht eingeben."; return; }
+      if(!m){
+        document.getElementById('supportStatus').textContent = "❗ Bitte Nachricht eingeben.";
+        return;
+      }
       const subject = encodeURIComponent('BYT Support');
       const body = encodeURIComponent(m);
       const href = `mailto:byt666@gmx.de?subject=${subject}&body=${body}`;
@@ -144,12 +243,14 @@
       window.open(href, '_blank');
     });
 
-    // ===== IMAGE GENERATOR =====
-    const promptInput = document.getElementById('promptInput');
-    const generateButton = document.getElementById('generateButton');
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    const imageContainer = document.getElementById('imageContainer');
-    document.getElementById('clearPrompt')?.addEventListener('click',()=>{ promptInput.value=''; });
+    /* ===== Image Generator (Backend) ===== */
+    const promptInput = $('#promptInput');
+    const generateButton = $('#generateButton');
+    const loadingIndicator = $('#loadingIndicator');
+    const imageContainer = $('#imageContainer');
+
+    $('#clearPrompt')?.addEventListener('click',()=>{ promptInput.value=''; });
+
     generateButton?.addEventListener('click', async ()=>{
       const userPrompt = promptInput.value.trim();
       if(!userPrompt){
@@ -160,13 +261,15 @@
       generateButton.textContent = '> Generating...';
       loadingIndicator.classList.remove('hidden');
       imageContainer.innerHTML = '';
+
       try {
         const r = await fetch("https://byt666-backend.onrender.com/api/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
           body: JSON.stringify({ prompt: userPrompt })
         });
         const result = await r.json();
+
         if(result.predictions?.[0]?.bytesBase64Encoded){
           const base64 = result.predictions[0].bytesBase64Encoded;
           const url = `data:image/png;base64,${base64}`;
