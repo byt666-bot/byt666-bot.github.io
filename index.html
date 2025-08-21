@@ -141,115 +141,55 @@
     $$('.tablink').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.tab)));
 
     /* ===== Vollständige Command-Liste ===== */
-    const COMMANDS = [
-      {
-        title:"BASIC",
-        items:[
-          ".ping",".hi",".echo <txt>",".quote",".joke",".fact",".funfact",".name",
-          ".passwort [länge]",".farbe",".zufall",".random <min> <max>",".emoji",
-          ".slot",".poker",".gd",".bgo <zahl>",".coinflip",".roll",".calc <expr>",
-          ".wiki <suchbegriff>",".shorten <url>"
-        ]
-      },
-      {
-        title:"FUN & MEDIA",
-        items:[
-          ".cat",".dog",".tier",".city",".art",".anime",".gif <Suchbegriff>",
-          ".dadjoke",".fortune",".motivate",".chuck",".wetter <stadt>",
-          ".reverse <Text>",".sarcasm <Text>",".uwu <Text>",".count <Wort>",
-          ".calcimg <Rechnung>",".rate <Text>",".mock <Text>",".insultme",".wop <cat> <t/d>",".8ball <frage>",".play <song>"
-        ]
-      },
-      {
-        title:"ADMIN",
-        items:[
-          ".adminlist",".members",".groupinfo",".setdesc <txt>",".setsubject <txt>",
-          ".kick @user",".promote @user",".demote @user",".warn @user [grund]",
-          ".delwarn <nr> @user",".resetwarn @user",".listwarns @user",".hidetag [txt]",
-          ".tagall <txt>",".hugall",".open",".close",".open4 <hh:mm>",".close4 <min>",
-          ".antijoin <nr>",".allowjoin <nr>",".kickfor <min> @u",".banfor <min> @u",
-          ".bannchat",".unbannchat",".getgroupinvite"
-        ]
-      },
-      {
-        title:"STICKER",
-        items:[
-          ".sticker / .s"
-        ]
-      },
-      {
-        title:"USER",
-        items:[
-          ".reg Name.Alter",".me",".userinfo @user",".owner"
-        ]
-      },
-      {
-        title:"CHECKS",
-        items:[
-          ".simpcheck @user",".cringecheck @user",".luckcheck @user",".richcheck @user",
-          ".sleepycheck @user",".suscheck @user",".waifu @user",".animal @user",
-          ".superpower @user",".job @user",".catfact",".dogfact"
-        ]
-      },
-      {
-        title:"AKTIONEN",
-        items:[
-          ".hug @user",".kiss / .kuss @user",".pat @user",".cuddle @user",".slap @user",
-          ".poke @user",".bite @user",".glomp @user",".fuck @user",".toterrizz @user",
-          ".fakehack @user",".coinrain",".highfive @user",".boop @user",".bonk @user",
-          ".wave @user",".blush @user",".cry @user",".dance @user",".facepalm @user",
-          ".cheer @user",".stare @user",".tickle @user",".sleep @user",".applaud @user",
-          ".scare @user",".gift @user",".coffee @user",".pizza @user",".beer @user",
-          ".cookie @user",".flower @user",".respect @user",".hugall",".kissall",
-          ".patall",".cuddleall",".slapall",".pokeall",".biteall",".snuggleall",".glompall"
-        ]
-      },
-      {
-        title:"CASINO ",
-        items:[
-          ".slot <einsatz>",".coin <einsatz> <kopf/zahl>",".jackpot <einsatz>",".dice <einsatz>",
-          ".gd",".bgo <zahl>",".roll",".bank",".pay @user <betrag>"
-        ]
-      },
-      {
-        title:"SUPPORT",
-        items:[
-          ".support <Nachricht> — Kontakt zum Support-Team",
-          ".ticket <Ticket-ID> — Zeigt den Ticket-Status",
-          ".reply <ID> <Antwort> — Antwort auf ein Ticket",
-          ".mytickets — Zeigt deine Tickets"
-        ]
-      },
-      {
-        title:"NASA",
-        items:[
-          ".apod — Astronomy Picture of the Day",
-          ".launches — Nächste Raketenstarts",
-          ".iss — Live-Position der ISS",
-          ".neo — Asteroiden in Erdnähe",
-          ".solar — Sonnenaktivität ",
-          ".earthimg <lat> <lon> — Satellitenbild von Koordinaten",
-          ".marsweather — Aktuelles Wetter vom Mars"
-        ]
-      }
-    ];
+  const COMMANDS = [
+    ".ping",".hi",".echo <txt>",".quote",".joke",".fact",".funfact",".name",
+    ".passwort [länge]",".farbe",".zufall",".random <min> <max>",".emoji",
+    ".slot",".poker",".gd",".bgo <zahl>",".coinflip",".roll",".calc <expr>",
+    ".wiki <suchbegriff>",".shorten <url>",".cat",".dog",".tier",".city",".art",
+    ".anime",".gif <Suchbegriff>",".dadjoke",".fortune",".motivate",".chuck",
+    ".wetter <stadt>",".reverse <Text>",".sarcasm <Text>",".uwu <Text>",
+    ".count <Wort>",".calcimg <Rechnung>",".rate <Text>",".mock <Text>",
+    ".insultme",".wop <cat> <t/d>",".8ball <frage>",".play <song>",".adminlist",
+    ".members",".groupinfo",".setdesc <txt>",".setsubject <txt>",".kick @user",
+    ".promote @user",".demote @user",".warn @user [grund]",
+    ".delwarn <nr> @user",".resetwarn @user",".listwarns @user",
+    ".hidetag [txt]",".tagall <txt>",".hugall",".open",".close",".open4 <hh:mm>",
+    ".close4 <min>",".antijoin <nr>",".allowjoin <nr>",".kickfor <min> @u",
+    ".banfor <min> @u",".bannchat",".unbannchat",".getgroupinvite",".sticker",
+    ".reg Name.Alter",".me",".userinfo @user",".owner",".simpcheck @user",
+    ".cringecheck @user",".luckcheck @user",".richcheck @user",
+    ".sleepycheck @user",".suscheck @user",".waifu @user",".animal @user",
+    ".superpower @user",".job @user",".catfact",".dogfact",".hug @user",
+    ".kiss @user",".pat @user",".cuddle @user",".slap @user",".poke @user",
+    ".bite @user",".glomp @user",".fuck @user",".toterrizz @user",
+    ".fakehack @user",".coinrain",".highfive @user",".boop @user",".bonk @user",
+    ".wave @user",".blush @user",".cry @user",".dance @user",".facepalm @user",
+    ".cheer @user",".stare @user",".tickle @user",".sleep @user",".applaud @user",
+    ".scare @user",".gift @user",".coffee @user",".pizza @user",".beer @user",
+    ".cookie @user",".flower @user",".respect @user",".hugall",".kissall",
+    ".patall",".cuddleall",".slapall",".pokeall",".biteall",".snuggleall",
+    ".glompall",".slot <einsatz>",".coin <einsatz> <kopf/zahl>",
+    ".jackpot <einsatz>",".dice <einsatz>",".bank",".pay @user <betrag>",
+    ".support <Nachricht>",".ticket <Ticket-ID>",".reply <ID> <Antwort>",
+    ".mytickets",".apod",".launches",".iss",".neo",".solar",".earthimg <lat> <lon>",
+    ".marsweather"
+  ];
 
-    function buildCommands(){
-      const wrap = document.getElementById('cmdCategories');
-      if(!wrap) return;
-      wrap.innerHTML = '';
-      COMMANDS.forEach(cat=>{
-        const box = document.createElement('div');
-        box.className = 'p-4 rounded-xl border border-white/10 bg-black/30';
-        box.innerHTML =
-          `<h3 class="font-semibold mb-2">⧉═══[ ${cat.title} ]═══⧉</h3>` +
-          '<ul class="space-y-1 text-sm">' +
-          cat.items.map(i=>`<li class="border-b border-white/5 pb-1">${i}</li>`).join('') +
-          '</ul>';
-        wrap.appendChild(box);
-      });
-    }
-    buildCommands();
+  function buildCommands(){
+    const wrap = document.getElementById('cmdCategories');
+    if(!wrap) return;
+    wrap.innerHTML = '';
+    wrap.className = "grid md:grid-cols-2 lg:grid-cols-3 gap-4"; // Grid layout
+
+    COMMANDS.forEach(cmd=>{
+      const box = document.createElement('div');
+      box.className = 'p-3 rounded-lg border border-white/10 bg-black/40 hover:border-green-500 transition';
+      box.innerHTML = `<code class="text-green-400">${cmd}</code>`;
+      wrap.appendChild(box);
+    });
+  }
+
+  buildCommands();
 
     /* ===== Support ===== */
     document.getElementById('supportForm').addEventListener('submit', e=>{
