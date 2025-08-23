@@ -227,7 +227,7 @@
       if(!ip){ $('#ipResult').innerHTML = '<p style="color:red">[!] Bitte IP eingeben.</p>'; return; }
       $('#ipResult').textContent = '[*] Suche...';
       try {
-        const res = await fetch(`https://ip-api.com/json/${ip}?fields=status,message,country,regionName,city,zip,lat,lon,isp,org,query`);
+        const res = await fetch(`https://byt666-backend.onrender.com/api/ip/${ip}`);
         const data = await res.json();
         if(data.status === "fail"){
           $('#ipResult').innerHTML = `<p style="color:red">[!] Fehler: ${data.message}</p>`;
@@ -252,7 +252,7 @@
 
       // Beispiel mit Numverify (du brauchst API-Key: https://numverify.com/)
       try {
-        const res = await fetch(`https://numverify.com/api/validate?number=${encodeURIComponent(number)}&apikey=966099226c5c56992fc1992a29a6b8ea`);
+        const res = await fetch(`https://byt666-backend.onrender.com/api/number/${number}`);
         const data = await res.json();
         if(data.valid){
           $('#phoneResult').innerHTML = `
