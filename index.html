@@ -227,7 +227,7 @@
       if(!ip){ $('#ipResult').innerHTML = '<p style="color:red">[!] Bitte IP eingeben.</p>'; return; }
       $('#ipResult').textContent = '[*] Suche...';
       try {
-        const res = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,country,regionName,city,zip,lat,lon,isp,org,query`);
+        const res = await fetch(`https://ip-api.com/json/${ip}?fields=status,message,country,regionName,city,zip,lat,lon,isp,org,query`);
         const data = await res.json();
         if(data.status === "fail"){
           $('#ipResult').innerHTML = `<p style="color:red">[!] Fehler: ${data.message}</p>`;
