@@ -81,6 +81,8 @@
         <button class="btn tablink" data-tab="imggen">IMG Generator</button>
         <button class="btn tablink" data-tab="info">Bot Infos</button>
         <button class="btn tablink" data-tab="support">Support</button>
+        <button class="btn tablink" data-tab="iplookup">IP Lookup</button>
+        <button class="btn tablink" data-tab="phoneinfo">Nummer Info</button>
       </nav>
     </div>
   </header>
@@ -150,6 +152,26 @@
         <p>Bei Problemen erreichst du uns via: <a href="mailto:byt666@gmx.de" class="text-gray-300 hover:underline">byt666@gmx.de</a></p>
       </div>
     </section>
+        <!-- ===== IP LOCATOR ===== -->
+    <section id="iplookup" class="tab section-bg" style="background-image:url('https://i.postimg.cc/HLmC4WfL/darkbild1.jpg');">
+      <div class="card">
+        <h2 class="text-2xl font-bold mb-3">🌍 IP Locator</h2>
+        <input id="ipInput" type="text" placeholder="> IP-Adresse eingeben..." class="w-full p-2 mb-3 bg-black border border-gray-700 rounded">
+        <button id="ipLookupBtn" class="btn">IP suchen</button>
+        <div id="ipResult" class="mt-4 text-sm text-gray-300">> Bereit</div>
+      </div>
+    </section>
+
+    <!-- ===== PHONE INFO ===== -->
+    <section id="phoneinfo" class="tab section-bg" style="background-image:url('https://i.postimg.cc/J49805xZ/Download-24.jpg');">
+      <div class="card">
+        <h2 class="text-2xl font-bold mb-3">📱 Nummer Info</h2>
+        <input id="phoneInput" type="text" placeholder="> Telefonnummer eingeben..." class="w-full p-2 mb-3 bg-black border border-gray-700 rounded">
+        <button id="phoneLookupBtn" class="btn">Nummer prüfen</button>
+        <div id="phoneResult" class="mt-4 text-sm text-gray-300">> Bereit</div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="max-w-6xl mx-auto px-4 py-10 text-center text-xs text-gray-500">
@@ -198,6 +220,53 @@
       card.className="cmd-card";
       card.textContent=c;
       cmdWrap.appendChild(card);
+    });
+    /* ===== IP Lookup ===== */
+    $('#ipLookupBtn')?.addEventListener('click', async ()=>{
+      const ip = $('#ipInput').value.trim();
+      if(!ip){ $('#ipResult').innerHTML = '<p style="color:red">[!] Bitte IP eingeben.</p>'; return; }
+      $('#ipResult').textContent = '[*] Suche...';
+      try {
+        const res = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,country,regionName,city,zip,lat,lon,isp,org,query`);
+        const data = await res.json();
+        if(data.status === "fail"){
+          $('#ipResult').innerHTML = `<p style="color:red">[!] Fehler: ${data.message}</p>`;
+        } else {
+          $('#ipResult').innerHTML = `
+            ✅ <b>${data.query}</b><br>
+            🌍 ${data.country}, ${data.regionName}, ${data.city} (${data.zip})<br>
+            📡 ISP: ${data.isp} (${data.org})<br>
+            📍 Koordinaten: ${data.lat}, ${data.lon}
+          `;
+        }
+      } catch(e){
+        $('#ipResult').innerHTML = '<p style="color:red">[!] Netzwerkfehler.</p>';
+      }
+    });
+
+    /* ===== Phone Info ===== */
+    $('#phoneLookupBtn')?.addEventListener('click', async ()=>{
+      const number = $('#phoneInput').value.trim();
+      if(!number){ $('#phoneResult').innerHTML = '<p style="color:red">[!] Bitte Nummer eingeben.</p>'; return; }
+      $('#phoneResult').textContent = '[*] Suche...';
+
+      // Beispiel mit Numverify (du brauchst API-Key: https://numverify.com/)
+      try {
+        const res = await fetch(`https://numverify.com/api/validate?number=${encodeURIComponent(number)}&apikey=966099226c5c56992fc1992a29a6b8ea`);
+        const data = await res.json();
+        if(data.valid){
+          $('#phoneResult').innerHTML = `
+            ✅ <b>${data.international_format}</b><br>
+            🌍 Land: ${data.country_name} (${data.country_code})<br>
+            📞 Carrier: ${data.carrier}<br>
+            📱 Typ: ${data.line_type}
+          `;
+        } else {
+          $('#phoneResult').innerHTML = '<p style="color:red">[!] Ungültige Nummer.</p>';
+        }
+      } catch(e){
+        $('#phoneResult').innerHTML = '<p style="color:red">[!] Netzwerkfehler.</p>';
+      }
     });
 
     /* ===== Image Generator (Backend) ===== */
